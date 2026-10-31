@@ -1,0 +1,20 @@
+{# Configuration of the plugin: address of i-REST, key of its API (write-only), time-out #}
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+<form method="post" action="{{ action }}">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    <div class="card-body">
+        <p class="text-muted">{{ __('iRest for GLPI shows to the users the banks of hours computed by i-REST and creates in GLPI what the workflows of i-REST need. The key is issued in i-REST, on the screen of the GLPI connection (Companion application).', 'irest') }}</p>
+        {{ fields.textField('url', url, __('Address of i-REST', 'irest'), {'placeholder': 'https://irest.example.com'}) }}
+        {{ fields.passwordField('api_key', '', __('Key of the API of i-REST', 'irest'), {
+            'helper': has_key ? __('A key is saved. Leave blank to keep it.', 'irest') : __('No key saved yet.', 'irest'),
+            'autocomplete': 'off',
+        }) }}
+        {{ fields.numberField('timeout', timeout, __('Time-out of a call (seconds)', 'irest'), {'min': 1, 'max': 120}) }}
+    </div>
+    <div class="card-footer d-flex gap-2">
+        <button type="submit" name="save" value="1" class="btn btn-primary">{{ _x('button', 'Save') }}</button>
+        <button type="submit" name="test" value="1" class="btn btn-outline-secondary">{{ __('Test the connection to i-REST', 'irest') }}</button>
+        <a href="{{ path('/plugins/irest/front/prerequisites.php') }}" class="btn btn-outline-secondary">{{ __('Preparation', 'irest') }}</a>
+    </div>
+</form>

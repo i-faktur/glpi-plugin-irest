@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <name>iRest for GLPI</name>
+    <key>irest</key>
+    <state>stable</state>
+    <logo></logo>
+    <description>
+        <short>
+            <en>Companion of i-REST: banks of hours of the customers and preparation of GLPI.</en>
+            <fr>Compagnon d'i-REST : contingents d'heures des clients et préparation de GLPI.</fr>
+            <de>Begleiter von i-REST: Stundenkontingente der Kunden und Vorbereitung von GLPI.</de>
+        </short>
+        <long>
+            <en>Shows to the users the banks of hours computed by i-REST from the Dolibarr contracts, and creates in GLPI what the workflows of i-REST need.</en>
+            <fr>Montre aux utilisateurs les contingents d'heures calculés par i-REST à partir des contrats Dolibarr, et crée dans GLPI ce dont les workflows d'i-REST ont besoin.</fr>
+            <de>Zeigt den Benutzern die von i-REST aus den Dolibarr-Verträgen berechneten Stundenkontingente und legt in GLPI an, was die Workflows von i-REST brauchen.</de>
+        </long>
+    </description>
+    <homepage>https://www.i-motion.fr</homepage>
+    <download></download>
+    <issues></issues>
+    <readme></readme>
+    <authors>
+        <author>I-Motion SARL</author>
+    </authors>
+    <versions>
+        <version>
+            <num>1.0.0</num>
+            <compatibility>~11.0</compatibility>
+            <compatibility>~12.0</compatibility>
+        </version>
+    </versions>
+    <langs>
+        <lang>en_GB</lang>
+        <lang>fr_FR</lang>
+        <lang>de_DE</lang>
+    </langs>
+    <license>GPL-3.0-or-later</license>
+    <tags>
+        <en><tag>billing</tag><tag>contract</tag><tag>dolibarr</tag></en>
+        <fr><tag>facturation</tag><tag>contrat</tag><tag>dolibarr</tag></fr>
+    </tags>
+</root>

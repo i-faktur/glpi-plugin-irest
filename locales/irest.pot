@@ -1,0 +1,199 @@
+# iRest for GLPI, translations (template)
+# Copyright (C) 2026 I-Motion SARL
+# This file is distributed under the same license as the plugin (GPL-3.0-or-later).
+msgid ""
+msgstr ""
+"Project-Id-Version: iRest for GLPI 1.0.0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "A key is saved. Leave blank to keep it."
+msgstr ""
+
+msgid "Address of i-REST"
+msgstr ""
+
+msgid "All customers"
+msgstr ""
+
+msgid "Banks of hours"
+msgstr ""
+
+msgid "Billed on"
+msgstr ""
+
+msgid "Bought (h)"
+msgstr ""
+
+msgid "Carried over (h)"
+msgstr ""
+
+msgid "Carried over to the next period"
+msgstr ""
+
+msgid "Choices"
+msgstr ""
+
+msgid "Contract"
+msgstr ""
+
+msgid "Create the ticked elements"
+msgstr ""
+
+#, php-format
+msgid "Created: %s"
+msgstr ""
+
+msgid "Current banks only"
+msgstr ""
+
+msgid "Customer"
+msgstr ""
+
+msgid "Different"
+msgstr ""
+
+msgid "Element"
+msgstr ""
+
+msgid "End of period"
+msgstr ""
+
+msgid "Few hours left"
+msgstr ""
+
+#, php-format
+msgid "Group \"%s\""
+msgstr ""
+
+msgid "Hours"
+msgstr ""
+
+msgid "Hours left"
+msgstr ""
+
+#, php-format
+msgid "In the entity #%s"
+msgstr ""
+
+msgid "Invoice"
+msgstr ""
+
+msgid "Key of the API of i-REST"
+msgstr ""
+
+msgid "Left (h)"
+msgstr ""
+
+msgid "Lost at the end of the period"
+msgstr ""
+
+msgid "Missing"
+msgstr ""
+
+msgid "My customer"
+msgstr ""
+
+msgid "My entity"
+msgstr ""
+
+msgid "No bank of hours."
+msgstr ""
+
+msgid "No key saved yet."
+msgstr ""
+
+msgid "No task taken from the banks of hours yet."
+msgstr ""
+
+msgid "Nothing left"
+msgstr ""
+
+msgid "Nothing was created."
+msgstr ""
+
+msgid "Period"
+msgstr ""
+
+msgid "Preparation"
+msgstr ""
+
+msgid "Present"
+msgstr ""
+
+msgid "Required"
+msgstr ""
+
+msgid "Sort by"
+msgstr ""
+
+msgid "State"
+msgstr ""
+
+msgid "Task"
+msgstr ""
+
+msgid "Tasks taken from the banks of hours"
+msgstr ""
+
+msgid "Test the connection to i-REST"
+msgstr ""
+
+msgid "The address of i-REST must start with http:// or https://."
+msgstr ""
+
+msgid "The configuration is saved."
+msgstr ""
+
+msgid "The time-out is a number of seconds between 1 and 120."
+msgstr ""
+
+msgid "The version of i-REST is not supported by this version of the plugin."
+msgstr ""
+
+msgid "The workflows of i-REST need nothing in this GLPI."
+msgstr ""
+
+msgid "Ticket"
+msgstr ""
+
+msgid "Time-out of a call (seconds)"
+msgstr ""
+
+msgid "Used (h)"
+msgstr ""
+
+msgid "What the workflows of i-REST need in this GLPI, as declared by i-REST. Tick what to create: it is created with your rights; nothing that exists is changed. The state is sent back to i-REST, which refuses to turn on a workflow while a required element is missing."
+msgstr ""
+
+msgid "Your entity is not linked to a customer in i-REST."
+msgstr ""
+
+msgid "closed"
+msgstr ""
+
+#, php-format
+msgid "i-REST answers: connection \"%s\"."
+msgstr ""
+
+msgid "i-REST cannot be reached for the moment. Try again later."
+msgstr ""
+
+msgid "i-REST cannot read the contracts for the moment. Try again later."
+msgstr ""
+
+msgid "i-REST gave an unexpected answer."
+msgstr ""
+
+msgid "i-REST refuses the key of the configuration: issue a new one in i-REST (screen of the connection, Companion application)."
+msgstr ""
+
+msgid "iRest for GLPI shows to the users the banks of hours computed by i-REST and creates in GLPI what the workflows of i-REST need. The key is issued in i-REST, on the screen of the GLPI connection (Companion application)."
+msgstr ""
+
+msgid "iRest is not configured yet: address of i-REST and key of its API (Setup > General, tab iRest)."
+msgstr ""
+
+msgid "iRest preparation"
+msgstr ""

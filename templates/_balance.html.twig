@@ -1,0 +1,8 @@
+{# Hours left of a bank of hours, highlighted by the level given by i-REST (variable "bank") #}
+{% if bank.level == 'used_up' %}
+    <span class="badge bg-danger text-white" title="{{ __('Nothing left', 'irest') }}">{{ bank.balance }}</span>
+{% elseif bank.level == 'low' %}
+    <span class="badge bg-warning text-dark" title="{{ __('Few hours left', 'irest') }}">{{ bank.balance }}</span>
+{% else %}
+    <strong>{{ bank.balance }}</strong>
+{% endif %}

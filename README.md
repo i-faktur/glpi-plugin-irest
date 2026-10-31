@@ -1,0 +1,47 @@
+# iRest for GLPI
+
+GLPI plugin of I-Motion, companion of the **i-REST** application (billing of GLPI tickets in Dolibarr, creation of
+the GLPI entities and users of the Dolibarr customers). It is a thin client of the API of i-REST: it computes
+nothing, it shows what i-REST computes and creates what i-REST declares.
+
+- **Banks of hours** (menu of the simplified interface, and *Assistance* in the standard interface): banks of hours
+  of the customer of the user (bought, carried over, used, left) and the tasks taken from them, as computed by
+  i-REST from the Dolibarr contracts. The customer is the first entity linked in i-REST among the active entity of
+  the user and its parents. Shown to the profiles with the right *Banks of hours*, value *My customer* (tab
+  *iRest* of the profiles).
+- **All customers** (same page, default view of the standard interface for the profiles with the value *All
+  customers* of the right): one row by bank of hours of every customer, current banks only or all, sorted by
+  customer or by hours left, few or no hours left highlighted; the name of a customer opens its detail. Both values
+  of the right are given at installation to the profiles that may update the configuration of GLPI (Super-Admin by
+  default); the other profiles are ticked one by one.
+- **Preparation** (link of the configuration): what the workflows of i-REST need in this GLPI (e.g. the group of
+  the users synced with Dolibarr), with its state; the missing elements are created with the rights of the
+  administrator signed in, nothing that exists is changed. The state is sent back to i-REST, which refuses to turn
+  on a workflow while a required element is missing.
+
+## Requirements
+
+- GLPI 11.0 to 12.x, PHP 8.2 or later.
+- i-REST reachable from the GLPI server (server to server: the browsers of the users never call i-REST).
+
+## Installation
+
+1. Copy the plugin into the `plugins/irest` directory of GLPI (the directory name must stay `irest`).
+2. *Setup > Plugins*: install, then enable *iRest for GLPI*.
+3. In i-REST, screen of the GLPI connection, *Companion application*: issue a key.
+4. *Setup > General*, tab *iRest*: address of i-REST, key, then *Test the connection to i-REST*.
+5. Profiles that may see the banks of hours: tab *iRest* of the profile, right *Banks of hours* (*My customer*,
+   *All customers*).
+6. *Preparation*: create the missing elements.
+
+The key is encrypted with the key of GLPI (`glpicrypt.key`) and declared to `glpi:security:changekey`.
+Errors of the calls to i-REST are written to `files/_log/irest.log`, never the key.
+
+## Development
+
+- Translations: `locales/*.po` (domain `irest`), compiled with `msgfmt -o locales/<lang>.mo locales/<lang>.po`.
+- Coding rules: PSR-12, Twig for the views, no raw SQL, rights checked in every script of `front/`.
+
+## License
+
+GPL-3.0-or-later, see `LICENSE`. Copyright (C) 2026 I-Motion SARL.

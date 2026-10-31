@@ -1,0 +1,62 @@
+{# Page "Banks of hours", view "All customers": one row by bank of hours of every customer, as i-REST computes them #}
+<div class="container-fluid im-rst-hours-banks">
+    <h2 class="my-3"><i class="ti ti-hourglass me-2"></i>{{ __('Banks of hours', 'irest') }} – {{ __('All customers', 'irest') }}</h2>
+    <form method="get" action="{{ page }}" class="d-flex flex-wrap align-items-center gap-3 mb-3">
+        <label class="form-check mb-0">
+            <input type="hidden" name="current" value="0">
+            <input class="form-check-input" type="checkbox" name="current" value="1"{% if current_only %} checked{% endif %} onchange="this.form.submit()">
+            <span class="form-check-label">{{ __('Current banks only', 'irest') }}</span>
+        </label>
+        <label class="d-flex align-items-center gap-2 mb-0">
+            {{ __('Sort by', 'irest') }}
+            <select class="form-select form-select-sm w-auto" name="sort" onchange="this.form.submit()">
+                <option value="name"{% if sort == 'name' %} selected{% endif %}>{{ __('Customer', 'irest') }}</option>
+                <option value="balance"{% if sort == 'balance' %} selected{% endif %}>{{ __('Hours left', 'irest') }}</option>
+            </select>
+        </label>
+        {% if own_customer %}
+            <a class="ms-auto" href="{{ page }}?view=mine">{{ __('My entity', 'irest') }}</a>
+        {% endif %}
+    </form>
+    {% if error %}
+        <div class="alert alert-warning" role="alert">{{ error }}</div>
+    {% endif %}
+    {% if incomplete %}
+        <div class="alert alert-warning" role="alert">{{ __('i-REST cannot read the contracts for the moment. Try again later.', 'irest') }}</div>
+    {% endif %}
+    {% if not error %}
+        {% if rows is empty %}
+            <p>{{ __('No bank of hours.', 'irest') }}</p>
+        {% else %}
+            <div class="card">
+                <table class="table table-hover card-table">
+                    <thead><tr>
+                        <th>{{ __('Customer', 'irest') }}</th><th>{{ __('Contract', 'irest') }}</th><th>{{ __('Period', 'irest') }}</th>
+                        <th class="text-end">{{ __('Bought (h)', 'irest') }}</th><th class="text-end">{{ __('Carried over (h)', 'irest') }}</th>
+                        <th class="text-end">{{ __('Used (h)', 'irest') }}</th><th class="text-end">{{ __('Left (h)', 'irest') }}</th>
+                        <th>{{ __('End of period', 'irest') }}</th>
+                    </tr></thead>
+                    <tbody>
+                    {% for row in rows %}
+                        {% set bank = row.bank %}
+                        <tr{% if bank and bank.closed %} class="text-muted"{% endif %}>
+                            <td><a href="{{ page }}?entity={{ row.entity }}">{{ row.name }}</a></td>
+                            {% if row.error %}
+                                <td colspan="7" class="text-warning">{{ __('i-REST cannot read the contracts for the moment. Try again later.', 'irest') }}</td>
+                            {% else %}
+                                <td>{{ bank.contract }}{% if bank.closed %} <small>({{ __('closed', 'irest') }})</small>{% endif %}</td>
+                                <td>{{ bank.start }} – {{ bank.end }}</td>
+                                <td class="text-end">{{ bank.bought }}</td>
+                                <td class="text-end">{{ bank.carried }}</td>
+                                <td class="text-end">{{ bank.taken }}</td>
+                                <td class="text-end">{% include '@irest/_balance.html.twig' %}</td>
+                                <td>{{ bank.rollover }}</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>

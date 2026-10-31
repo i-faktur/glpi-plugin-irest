@@ -1,0 +1,58 @@
+{# Page "Preparation": prerequisites of the workflows of i-REST in this GLPI, creation of those missing #}
+<div class="container-fluid im-rst-prerequisites">
+    <h2 class="my-3"><i class="ti ti-hourglass me-2"></i>{{ __('iRest preparation', 'irest') }}</h2>
+    <p class="text-muted">{{ __('What the workflows of i-REST need in this GLPI, as declared by i-REST. Tick what to create: it is created with your rights; nothing that exists is changed. The state is sent back to i-REST, which refuses to turn on a workflow while a required element is missing.', 'irest') }}</p>
+    {% if error %}
+        <div class="alert alert-warning" role="alert">{{ error }}</div>
+    {% elseif states is empty %}
+        <p>{{ __('The workflows of i-REST need nothing in this GLPI.', 'irest') }}</p>
+    {% else %}
+        <form method="post" action="{{ action }}">
+            <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+            <table class="table table-hover">
+                <thead><tr>
+                    <th></th><th>{{ __('Element', 'irest') }}</th><th>{{ __('Required', 'irest') }}</th>
+                    <th>{{ __('State', 'irest') }}</th><th>{{ __('Choices', 'irest') }}</th>
+                </tr></thead>
+                <tbody>
+                {% for state in states %}
+                    {% set code = state.prerequisite.code %}
+                    <tr>
+                        <td>
+                            {% if state.status == 'missing' %}
+                                <input type="checkbox" class="form-check-input" name="codes[]" value="{{ code }}" checked aria-label="{{ state.label }}">
+                            {% endif %}
+                        </td>
+                        <td>{{ state.label }}{% if state.comment %}<br><small class="text-muted">{{ state.comment }}</small>{% endif %}</td>
+                        <td>{{ state.prerequisite.required ? __('Yes') : __('No') }}</td>
+                        <td>
+                            {% if state.status == 'present' %}
+                                <span class="badge bg-success">{{ __('Present', 'irest') }}</span>
+                            {% elseif state.status == 'missing' %}
+                                <span class="badge bg-danger">{{ __('Missing', 'irest') }}</span>
+                            {% else %}
+                                <span class="badge bg-warning">{{ __('Different', 'irest') }}</span>
+                            {% endif %}
+                            {% if state.detail %}<br><small>{{ state.detail }}</small>{% endif %}
+                        </td>
+                        <td>
+                            {% if state.status == 'missing' %}
+                                {% for choice in state.prerequisite.choices %}
+                                    {% if choice.name == 'recursive' %}
+                                        <input type="hidden" name="choices[{{ code }}][recursive]" value="0">
+                                        <label class="form-check">
+                                            <input type="checkbox" class="form-check-input" name="choices[{{ code }}][recursive]" value="1" {{ choice.default ? 'checked' }}>
+                                            <span class="form-check-label">{{ __('Child entities') }}</span>
+                                        </label>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" name="create" value="1" class="btn btn-primary">{{ __('Create the ticked elements', 'irest') }}</button>
+        </form>
+    {% endif %}
+</div>

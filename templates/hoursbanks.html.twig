@@ -1,0 +1,66 @@
+{# Page "Banks of hours": banks of hours of the customer of the user and the tasks taken from them, as i-REST computes them #}
+<div class="container-fluid im-rst-hours-banks">
+    <h2 class="my-3"><i class="ti ti-hourglass me-2"></i>{{ __('Banks of hours', 'irest') }}</h2>
+    {% if all_url %}
+        <p><a href="{{ all_url }}"><i class="ti ti-arrow-left me-1"></i>{{ __('All customers', 'irest') }}</a></p>
+    {% endif %}
+    {% if error %}
+        <div class="alert alert-warning" role="alert">{{ error }}</div>
+    {% endif %}
+    {% for customer in customers %}
+        <div class="card mb-3">
+            <div class="card-header"><h3 class="card-title">{{ customer.name }}</h3></div>
+            <div class="card-body">
+                {% if customer.error %}
+                    <div class="alert alert-warning" role="alert">{{ __('i-REST cannot read the contracts for the moment. Try again later.', 'irest') }}</div>
+                {% elseif customer.banks is empty %}
+                    <p>{{ __('No bank of hours.', 'irest') }}</p>
+                {% else %}
+                    <table class="table table-hover">
+                        <thead><tr>
+                            <th>{{ __('Contract', 'irest') }}</th><th>{{ __('Period', 'irest') }}</th>
+                            <th class="text-end">{{ __('Bought (h)', 'irest') }}</th><th class="text-end">{{ __('Carried over (h)', 'irest') }}</th>
+                            <th class="text-end">{{ __('Used (h)', 'irest') }}</th><th class="text-end">{{ __('Left (h)', 'irest') }}</th>
+                            <th>{{ __('End of period', 'irest') }}</th>
+                        </tr></thead>
+                        <tbody>
+                        {% for bank in customer.banks %}
+                            <tr{% if bank.closed %} class="text-muted"{% endif %}>
+                                <td>{{ bank.contract }}{% if bank.closed %} <small>({{ __('closed', 'irest') }})</small>{% endif %}</td>
+                                <td>{{ bank.start }} – {{ bank.end }}</td>
+                                <td class="text-end">{{ bank.bought }}</td>
+                                <td class="text-end">{{ bank.carried }}</td>
+                                <td class="text-end">{{ bank.taken }}</td>
+                                <td class="text-end">{% include '@irest/_balance.html.twig' %}</td>
+                                <td>{{ bank.rollover }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <h4 class="mt-3">{{ __('Tasks taken from the banks of hours', 'irest') }}</h4>
+                    {% if customer.tickets is empty %}
+                        <p>{{ __('No task taken from the banks of hours yet.', 'irest') }}</p>
+                    {% else %}
+                        <table class="table table-sm">
+                            <thead><tr>
+                                <th>{{ __('Billed on', 'irest') }}</th><th>{{ __('Ticket', 'irest') }}</th><th>{{ __('Task', 'irest') }}</th>
+                                <th class="text-end">{{ __('Hours', 'irest') }}</th><th>{{ __('Invoice', 'irest') }}</th>
+                            </tr></thead>
+                            <tbody>
+                            {% for ticket in customer.tickets %}
+                                <tr>
+                                    <td>{{ ticket.date }}</td>
+                                    <td><a href="{{ ticket_url ~ ticket.ticket }}">#{{ ticket.ticket }}</a></td>
+                                    <td>{{ ticket.label }}</td>
+                                    <td class="text-end">{{ ticket.hours }}</td>
+                                    <td>{{ ticket.invoice }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
