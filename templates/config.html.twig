@@ -1,20 +1,50 @@
-{# Configuration of the plugin: address of i-REST, key of its API (write-only), time-out #}
+{# Configuration of the plugin: mode, then address of i-REST, key of its API (write-only) and time-out (mode "read"), or the state of the data written by i-REST (mode "push") #}
 {% import 'components/form/fields_macros.html.twig' as fields %}
 
 <form method="post" action="{{ action }}">
     <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
     <div class="card-body">
-        <p class="text-muted">{{ __('iRest for GLPI shows to the users the banks of hours computed by i-REST and creates in GLPI what the workflows of i-REST need. The key is issued in i-REST, on the screen of the GLPI connection (Companion application).', 'irest') }}</p>
-        {{ fields.textField('url', url, __('Address of i-REST', 'irest'), {'placeholder': 'https://irest.example.com'}) }}
-        {{ fields.passwordField('api_key', '', __('Key of the API of i-REST', 'irest'), {
-            'helper': has_key ? __('A key is saved. Leave blank to keep it.', 'irest') : __('No key saved yet.', 'irest'),
-            'autocomplete': 'off',
-        }) }}
-        {{ fields.numberField('timeout', timeout, __('Time-out of a call (seconds)', 'irest'), {'min': 1, 'max': 120}) }}
+        <h4>{{ __('Mode', 'irest') }}</h4>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="mode" id="im-rst-mode-read" value="read"{{ mode == 'read' ? ' checked' : '' }}>
+            <label class="form-check-label" for="im-rst-mode-read">{{ __('Read: this GLPI calls i-REST', 'irest') }}</label>
+            <div class="form-text">{{ __('The plugin reads the API of i-REST with the address and key below: this GLPI must reach i-REST.', 'irest') }}</div>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="mode" id="im-rst-mode-push" value="push"{{ mode == 'push' ? ' checked' : '' }}>
+            <label class="form-check-label" for="im-rst-mode-push">{{ __('Push: i-REST writes its data in this GLPI', 'irest') }}</label>
+            <div class="form-text">{{ __('i-REST writes the banks of hours and the prerequisites here through the API of GLPI and reads back the state of the prerequisites: this GLPI never calls i-REST. Choose the same mode in i-REST (screen of the GLPI connection, Companion application), and give the profile of its API user the right "Data sent by i-REST" (tab iRest of the profiles).', 'irest') }}</div>
+        </div>
     </div>
     <div class="card-footer d-flex gap-2">
-        <button type="submit" name="save" value="1" class="btn btn-primary">{{ _x('button', 'Save') }}</button>
-        <button type="submit" name="test" value="1" class="btn btn-outline-secondary">{{ __('Test the connection to i-REST', 'irest') }}</button>
-        <a href="{{ path('/plugins/irest/front/prerequisites.php') }}" class="btn btn-outline-secondary">{{ __('Preparation', 'irest') }}</a>
+        <button type="submit" name="save_mode" value="1" class="btn btn-primary">{{ _x('button', 'Save') }}</button>
     </div>
+</form>
+
+<form method="post" action="{{ action }}">
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+    {% if mode == 'push' %}
+        <div class="card-body">
+            <p>{{ __('Last data written by i-REST: %s', 'irest')|format(last_write ? last_write|formatted_datetime : __('i-REST has written nothing yet', 'irest')) }}</p>
+        </div>
+        <div class="card-footer d-flex gap-2">
+            <button type="submit" name="test" value="1" class="btn btn-outline-secondary">{{ __('Check the data written by i-REST', 'irest') }}</button>
+            <a href="{{ path('/plugins/irest/front/prerequisites.php') }}" class="btn btn-outline-secondary">{{ __('Preparation', 'irest') }}</a>
+        </div>
+    {% else %}
+        <div class="card-body">
+            <p class="text-muted">{{ __('iRest for GLPI shows to the users the banks of hours computed by i-REST and creates in GLPI what the workflows of i-REST need. The key is issued in i-REST, on the screen of the GLPI connection (Companion application).', 'irest') }}</p>
+            {{ fields.textField('url', url, __('Address of i-REST', 'irest'), {'placeholder': 'https://irest.example.com'}) }}
+            {{ fields.passwordField('api_key', '', __('Key of the API of i-REST', 'irest'), {
+                'helper': has_key ? __('A key is saved. Leave blank to keep it.', 'irest') : __('No key saved yet.', 'irest'),
+                'autocomplete': 'off',
+            }) }}
+            {{ fields.numberField('timeout', timeout, __('Time-out of a call (seconds)', 'irest'), {'min': 1, 'max': 120}) }}
+        </div>
+        <div class="card-footer d-flex gap-2">
+            <button type="submit" name="save" value="1" class="btn btn-primary">{{ _x('button', 'Save') }}</button>
+            <button type="submit" name="test" value="1" class="btn btn-outline-secondary">{{ __('Test the connection to i-REST', 'irest') }}</button>
+            <a href="{{ path('/plugins/irest/front/prerequisites.php') }}" class="btn btn-outline-secondary">{{ __('Preparation', 'irest') }}</a>
+        </div>
+    {% endif %}
 </form>

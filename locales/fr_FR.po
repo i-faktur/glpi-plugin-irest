@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the plugin (GPL-3.0-or-later).
 msgid ""
 msgstr ""
-"Project-Id-Version: iRest for GLPI 1.0.0\n"
+"Project-Id-Version: iRest for GLPI 1.1.0\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -34,6 +34,9 @@ msgstr "Reportées (h)"
 msgid "Carried over to the next period"
 msgstr "Reportées sur la période suivante"
 
+msgid "Check the data written by i-REST"
+msgstr "Vérifier les données écrites par i-REST"
+
 msgid "Choices"
 msgstr "Choix"
 
@@ -52,6 +55,16 @@ msgstr "Contingents en cours seulement"
 
 msgid "Customer"
 msgstr "Client"
+
+#, php-format
+msgid "Data of i-REST found: connection \"%s\"."
+msgstr "Données d'i-REST trouvées : connexion « %s »."
+
+msgid "Data sent by i-REST"
+msgstr "Données envoyées par i-REST"
+
+msgid "Data sent by i-REST (API user of i-REST)"
+msgstr "Données envoyées par i-REST (utilisateur d'API d'i-REST)"
 
 msgid "Different"
 msgstr "Différent"
@@ -85,6 +98,10 @@ msgstr "Facture"
 msgid "Key of the API of i-REST"
 msgstr "Clé de l'API d'i-REST"
 
+#, php-format
+msgid "Last data written by i-REST: %s"
+msgstr "Dernières données écrites par i-REST : %s"
+
 msgid "Left (h)"
 msgstr "Solde (h)"
 
@@ -93,6 +110,9 @@ msgstr "Perdues en fin de période"
 
 msgid "Missing"
 msgstr "Manquant"
+
+msgid "Mode"
+msgstr "Mode"
 
 msgid "My customer"
 msgstr "Mon client"
@@ -124,6 +144,12 @@ msgstr "Préparation"
 msgid "Present"
 msgstr "Présent"
 
+msgid "Push: i-REST writes its data in this GLPI"
+msgstr "Envoi : i-REST écrit ses données dans ce GLPI"
+
+msgid "Read: this GLPI calls i-REST"
+msgstr "Lecture : ce GLPI appelle i-REST"
+
 msgid "Required"
 msgstr "Indispensable"
 
@@ -148,6 +174,9 @@ msgstr "L'adresse d'i-REST doit commencer par http:// ou https://."
 msgid "The configuration is saved."
 msgstr "La configuration est enregistrée."
 
+msgid "The plugin reads the API of i-REST with the address and key below: this GLPI must reach i-REST."
+msgstr "Le plugin lit l'API d'i-REST avec l'adresse et la clé ci-dessous : ce GLPI doit joindre i-REST."
+
 msgid "The time-out is a number of seconds between 1 and 120."
 msgstr "Le délai d'attente est un nombre de secondes entre 1 et 120."
 
@@ -162,6 +191,9 @@ msgstr "Ticket"
 
 msgid "Time-out of a call (seconds)"
 msgstr "Délai d'attente d'un appel (secondes)"
+
+msgid "Unknown mode."
+msgstr "Mode inconnu."
 
 msgid "Used (h)"
 msgstr "Consommées (h)"
@@ -188,8 +220,17 @@ msgstr "i-REST ne peut pas lire les contrats pour le moment. Réessayez plus tar
 msgid "i-REST gave an unexpected answer."
 msgstr "i-REST a donné une réponse inattendue."
 
+msgid "i-REST has not written its data in this GLPI yet (mode push): check the mode of the connection in i-REST and the right of its API user."
+msgstr "i-REST n'a pas encore écrit ses données dans ce GLPI (mode envoi) : vérifiez le mode de la connexion dans i-REST et le droit de son utilisateur d'API."
+
+msgid "i-REST has written nothing yet"
+msgstr "i-REST n'a encore rien écrit"
+
 msgid "i-REST refuses the key of the configuration: issue a new one in i-REST (screen of the connection, Companion application)."
 msgstr "i-REST refuse la clé de la configuration : générez-en une nouvelle dans i-REST (écran de la connexion, Application compagnon)."
+
+msgid "i-REST writes the banks of hours and the prerequisites here through the API of GLPI and reads back the state of the prerequisites: this GLPI never calls i-REST. Choose the same mode in i-REST (screen of the GLPI connection, Companion application), and give the profile of its API user the right \"Data sent by i-REST\" (tab iRest of the profiles)."
+msgstr "i-REST écrit ici les contingents et les prérequis par l'API de GLPI et relit l'état des prérequis : ce GLPI n'appelle jamais i-REST. Choisissez le même mode dans i-REST (écran de la connexion GLPI, Application compagnon), et donnez au profil de son utilisateur d'API le droit « Données envoyées par i-REST » (onglet iRest des profils)."
 
 msgid "iRest for GLPI shows to the users the banks of hours computed by i-REST and creates in GLPI what the workflows of i-REST need. The key is issued in i-REST, on the screen of the GLPI connection (Companion application)."
 msgstr "iRest for GLPI montre aux utilisateurs les contingents calculés par i-REST et crée dans GLPI ce dont les workflows d'i-REST ont besoin. La clé se génère dans i-REST, sur l'écran de la connexion GLPI (Application compagnon)."

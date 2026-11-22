@@ -18,7 +18,14 @@ global $CFG_GLPI;
 
 Session::checkRight('config', UPDATE);
 
-if (isset($_POST['save']) || isset($_POST['test'])) {
+if (isset($_POST['save_mode'])) {
+    try {
+        Config::saveMode((string) ($_POST['mode'] ?? ''));
+        Session::addMessageAfterRedirect(__('The configuration is saved.', 'irest'));
+    } catch (InvalidArgumentException $exception) {
+        Session::addMessageAfterRedirect($exception->getMessage(), false, ERROR);
+    }
+} elseif (isset($_POST['save']) || isset($_POST['test'])) {
     if (isset($_POST['save'])) {
         try {
             Config::save((string) ($_POST['url'] ?? ''), (string) ($_POST['api_key'] ?? ''), (int) ($_POST['timeout'] ?? Config::DEFAULT_TIMEOUT));
@@ -29,7 +36,8 @@ if (isset($_POST['save']) || isset($_POST['test'])) {
     }
     try {
         $status = Client::fromConfig()->status();
-        Session::addMessageAfterRedirect(sprintf(__('i-REST answers: connection "%s".', 'irest'), (string) ($status['connection']['label'] ?? '?')), false, INFO);
+        $message = Config::values()['mode'] === Config::MODE_PUSH ? __('Data of i-REST found: connection "%s".', 'irest') : __('i-REST answers: connection "%s".', 'irest');
+        Session::addMessageAfterRedirect(sprintf($message, (string) ($status['connection']['label'] ?? '?')), false, INFO);
     } catch (ClientException $exception) {
         Session::addMessageAfterRedirect($exception->userMessage(), false, ERROR);
     }

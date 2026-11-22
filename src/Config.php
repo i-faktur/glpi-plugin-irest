@@ -16,9 +16,10 @@ use GLPIKey;
 use Session;
 
 /**
- * Configuration of the plugin (context "plugin:irest" of glpi_configs): address of i-REST, key of the API of
- * i-REST (encrypted with the key of GLPI, never shown again) and time-out of the calls. Shown as the tab "iRest"
- * of Setup > General.
+ * Configuration of the plugin (context "plugin:irest" of glpi_configs): mode ("read": the plugin calls the API of
+ * i-REST; "push": i-REST writes its data in GLPI, see Document), address of i-REST, key of the API of i-REST
+ * (encrypted with the key of GLPI, never shown again) and time-out of the calls. Shown as the tab "iRest" of
+ * Setup > General.
  */
 class Config extends \Config
 {
@@ -27,6 +28,12 @@ class Config extends \Config
 
     /** Time-out of a call to i-REST by default, in seconds. */
     public const DEFAULT_TIMEOUT = 10;
+
+    /** Mode "read": the plugin calls the API of i-REST (by default). */
+    public const MODE_READ = 'read';
+
+    /** Mode "push": i-REST writes its data in GLPI, the plugin never calls i-REST. */
+    public const MODE_PUSH = 'push';
 
     /**
      * Name of the tab of Setup > General, for the administrators.
@@ -50,9 +57,11 @@ class Config extends \Config
         }
         $values = self::values();
         TemplateRenderer::getInstance()->display('@irest/config.html.twig', [
+            'mode'       => $values['mode'],
             'url'        => $values['url'],
             'has_key'    => $values['api_key'] !== '',
             'timeout'    => $values['timeout'],
+            'last_write' => $values['mode'] === self::MODE_PUSH ? Document::lastWrite() : null,
             'action'     => self::pageUrl('front/config.form.php'),
         ]);
 
@@ -72,18 +81,32 @@ class Config extends \Config
     /**
      * Current configuration, the key decrypted ('' when not set).
      *
-     * @return array{url: string, api_key: string, timeout: int}
+     * @return array{mode: string, url: string, api_key: string, timeout: int}
      */
     public static function values(): array
     {
-        $stored = \Config::getConfigurationValues(self::CONTEXT, ['url', 'api_key', 'timeout']);
+        $stored = \Config::getConfigurationValues(self::CONTEXT, ['mode', 'url', 'api_key', 'timeout']);
         $key = (string) ($stored['api_key'] ?? '');
 
         return [
+            'mode'    => ($stored['mode'] ?? '') === self::MODE_PUSH ? self::MODE_PUSH : self::MODE_READ,
             'url'     => rtrim((string) ($stored['url'] ?? ''), '/'),
             'api_key' => $key !== '' ? (string) (new GLPIKey())->decrypt($key) : '',
             'timeout' => max(1, (int) ($stored['timeout'] ?? self::DEFAULT_TIMEOUT)),
         ];
+    }
+
+    /**
+     * Saves the mode of the plugin.
+     *
+     * @throws \InvalidArgumentException when the mode is not one
+     */
+    public static function saveMode(string $mode): void
+    {
+        if (!in_array($mode, [self::MODE_READ, self::MODE_PUSH], true)) {
+            throw new \InvalidArgumentException(__('Unknown mode.', 'irest'));
+        }
+        \Config::setConfigurationValues(self::CONTEXT, ['mode' => $mode]);
     }
 
     /**
@@ -117,7 +140,7 @@ class Config extends \Config
     {
         // Only the missing values are written: writing the stored key again would encrypt it once more
         $current = \Config::getConfigurationValues(self::CONTEXT);
-        $missing = array_diff_key(['url' => '', 'api_key' => '', 'timeout' => self::DEFAULT_TIMEOUT], $current);
+        $missing = array_diff_key(['mode' => self::MODE_READ, 'url' => '', 'api_key' => '', 'timeout' => self::DEFAULT_TIMEOUT], $current);
         if ($missing !== []) {
             \Config::setConfigurationValues(self::CONTEXT, $missing);
         }

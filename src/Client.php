@@ -15,9 +15,12 @@ use GuzzleHttp\Exception\GuzzleException;
 use Toolbox;
 
 /**
- * Client of the API of i-REST (server to server, key of the configuration). The plugin computes nothing: what it
- * shows and what it creates comes from here. Errors are thrown as ClientException with a short code; their detail
- * goes to the log of the plugin (files/_log/irest.log), never the key.
+ * Data of i-REST for the pages of the plugin, in the mode of the configuration. Mode "read": calls to the API of
+ * i-REST, server to server, with the key of the configuration. Mode "push": the same answers, read in the documents
+ * i-REST wrote in GLPI (Document), and the report of the prerequisites written there for i-REST: GLPI never calls
+ * i-REST. The plugin computes nothing: what it shows and what it creates comes from here. Errors are thrown as
+ * ClientException with a short code; their detail goes to the log of the plugin (files/_log/irest.log), never the
+ * key.
  */
 final class Client
 {
@@ -28,22 +31,27 @@ final class Client
      * @param string $url     address of i-REST, without trailing slash
      * @param string $apiKey  key of the API of i-REST
      * @param int    $timeout time-out of a call, in seconds
+     * @param bool   $push    whether the data are read in the documents written by i-REST (mode "push")
      */
     public function __construct(
         private readonly string $url,
         private readonly string $apiKey,
         private readonly int $timeout,
+        private readonly bool $push = false,
     ) {
     }
 
     /**
      * Client of the configuration of the plugin.
      *
-     * @throws ClientException "not_configured" when the address or the key is missing
+     * @throws ClientException "not_configured" when the address or the key is missing in mode "read"
      */
     public static function fromConfig(): self
     {
         $values = Config::values();
+        if ($values['mode'] === Config::MODE_PUSH) {
+            return new self('', '', $values['timeout'], true);
+        }
         if ($values['url'] === '' || $values['api_key'] === '') {
             throw new ClientException('not_configured');
         }
@@ -132,6 +140,9 @@ final class Client
      */
     private function call(string $method, string $path, array $query = [], ?array $body = null): array
     {
+        if ($this->push) {
+            return $this->local($method, $path, $query, $body);
+        }
         $options = [
             'timeout'     => $this->timeout,
             'http_errors' => false,
@@ -162,6 +173,63 @@ final class Client
         if ($code !== 200 || !is_array($answer)) {
             Toolbox::logInFile('irest', sprintf('%s %s: HTTP %d' . PHP_EOL, $method, $path, $code));
             throw new ClientException($code >= 500 ? 'unavailable' : 'invalid_response');
+        }
+
+        return $answer;
+    }
+
+    /**
+     * Answer of a call read in the documents written by i-REST (mode "push"); the report of the prerequisites is
+     * written as a document that i-REST reads back. The banks of hours of a customer are those of the first entity
+     * of the list that has a document, as i-REST answers.
+     *
+     * @param array<string, string>     $query
+     * @param array<string, mixed>|null $body
+     *
+     * @return array<string, mixed>
+     *
+     * @throws ClientException "not_pushed", "not_linked" or "invalid_response"
+     */
+    private function local(string $method, string $path, array $query, ?array $body): array
+    {
+        if ($method === 'POST' && $path === 'prerequisites/report') {
+            if (!Document::write(Document::PREREQUISITES_REPORT, (string) json_encode($body))) {
+                throw new ClientException('invalid_response');
+            }
+
+            return ['recorded' => count((array) ($body['prerequisites'] ?? []))];
+        }
+        if ($path === 'hours-banks') {
+            foreach (array_filter(explode(',', $query['entities'] ?? ''), 'ctype_digit') as $entityId) {
+                $document = Document::read(Document::HOURS_BANKS_PREFIX . $entityId);
+                if ($document !== null) {
+                    return self::decoded($document['content']);
+                }
+            }
+            // i-REST writes one document per linked entity: none means not linked (or nothing written yet)
+            throw new ClientException(Document::lastWrite() !== null ? 'not_linked' : 'not_pushed');
+        }
+        $keys = ['status' => Document::STATUS, 'prerequisites' => Document::PREREQUISITES, 'hours-banks/overview' => Document::HOURS_BANKS_OVERVIEW];
+        $document = isset($keys[$path]) ? Document::read($keys[$path]) : null;
+        if ($document === null) {
+            throw new ClientException('not_pushed');
+        }
+
+        return self::decoded($document['content']);
+    }
+
+    /**
+     * Content of a document decoded.
+     *
+     * @return array<string, mixed>
+     *
+     * @throws ClientException "invalid_response" when it is not a JSON object
+     */
+    private static function decoded(string $content): array
+    {
+        $answer = json_decode($content, true);
+        if (!is_array($answer)) {
+            throw new ClientException('invalid_response');
         }
 
         return $answer;

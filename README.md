@@ -1,8 +1,12 @@
 # iRest for GLPI
 
 GLPI plugin of I-Motion, companion of the **i-REST** application (billing of GLPI tickets in Dolibarr, creation of
-the GLPI entities and users of the Dolibarr customers). It is a thin client of the API of i-REST: it computes
-nothing, it shows what i-REST computes and creates what i-REST declares.
+the GLPI entities and users of the Dolibarr customers). It computes nothing: it shows what i-REST computes and
+creates what i-REST declares, in one of two modes chosen in its configuration:
+
+- **Read** (by default): the plugin reads the API of i-REST, server to server, with a key issued by i-REST.
+- **Push**: i-REST writes its data in GLPI through the REST API of GLPI (object `GlpiPlugin\Irest\Document`) and
+  reads back the state of the prerequisites; GLPI never calls i-REST.
 
 - **Banks of hours** (menu of the simplified interface, and *Assistance* in the standard interface): banks of hours
   of the customer of the user (bought, carried over, used, left) and the tasks taken from them, as computed by
@@ -22,14 +26,18 @@ nothing, it shows what i-REST computes and creates what i-REST declares.
 ## Requirements
 
 - GLPI 11.0 to 12.x, PHP 8.2 or later.
-- i-REST reachable from the GLPI server (server to server: the browsers of the users never call i-REST).
+- Mode read: i-REST reachable from the GLPI server (server to server: the browsers of the users never call i-REST).
+- Mode push: REST API of GLPI enabled for the API user of i-REST, whose profile has the right *Data sent by i-REST*
+  (tab *iRest* of the profiles), and the mode push chosen in i-REST on its GLPI connection.
 
 ## Installation
 
 1. Copy the plugin into the `plugins/irest` directory of GLPI (the directory name must stay `irest`).
 2. *Setup > Plugins*: install, then enable *iRest for GLPI*.
-3. In i-REST, screen of the GLPI connection, *Companion application*: issue a key.
-4. *Setup > General*, tab *iRest*: address of i-REST, key, then *Test the connection to i-REST*.
+3. Mode read: in i-REST, screen of the GLPI connection, *Companion application*: issue a key; then *Setup >
+   General*, tab *iRest*: address of i-REST, key, then *Test the connection to i-REST*.
+   Mode push: in i-REST, same screen, choose the mode push; give the profile of the API user of i-REST the right
+   *Data sent by i-REST*; tab *iRest*: mode push, then *Check the data written by i-REST*.
 5. Profiles that may see the banks of hours: tab *iRest* of the profile, right *Banks of hours* (*My customer*,
    *All customers*).
 6. *Preparation*: create the missing elements.
@@ -40,6 +48,8 @@ Errors of the calls to i-REST are written to `files/_log/irest.log`, never the k
 ## Development
 
 - Translations: `locales/*.po` (domain `irest`), compiled with `msgfmt -o locales/<lang>.mo locales/<lang>.po`.
+- Mode push: the field `name` of a document is its key (`status`, `prerequisites`, `hours-banks-overview`,
+  `hours-banks-<entity>`, written by i-REST; `prerequisites-report` and `companion`, written by the plugin).
 - Coding rules: PSR-12, Twig for the views, no raw SQL, rights checked in every script of `front/`.
 
 ## License

@@ -15,3 +15,8 @@ All notable changes of iRest for GLPI. Versions follow [Semantic Versioning](htt
   time-out, test of the connection.
 - Page "Preparation": prerequisites declared by i-REST (groups), checked and reported back, the missing ones
   created on demand.
+- Mode "push" (version 1.1.0, needed by i-REST for this mode): i-REST writes its data in GLPI through the REST API of
+  GLPI (object `GlpiPlugin\Irest\Document`, table `glpi_plugin_irest_documents`; each customer in its entity,
+  recursive) and reads back the report of the prerequisites, so that GLPI never calls i-REST. Mode chosen in the
+  configuration ("read" by default); right "Data sent by i-REST" for the profile of the API user of i-REST (given at
+  installation to the profiles that may update the configuration of GLPI). The pages read the documents in this mode.
