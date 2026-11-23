@@ -17,15 +17,16 @@
         </long>
     </description>
     <homepage>https://www.i-motion.fr</homepage>
-    <download></download>
-    <issues></issues>
-    <readme></readme>
+    <download>https://github.com/i-faktur/glpi-plugin-irest/releases</download>
+    <issues>https://github.com/i-faktur/glpi-plugin-irest/issues</issues>
+    <readme>https://github.com/i-faktur/glpi-plugin-irest/blob/main/README.md</readme>
     <authors>
         <author>I-Motion SARL</author>
     </authors>
     <versions>
         <version>
-            <num>1.0.0</num>
+            <num>1.1.0</num>
+            <download_url>https://github.com/i-faktur/glpi-plugin-irest/releases/download/v1.1.0/glpi-irest-1.1.0.tar.bz2</download_url>
             <compatibility>~11.0</compatibility>
             <compatibility>~12.0</compatibility>
         </version>

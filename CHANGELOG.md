@@ -2,7 +2,9 @@
 
 All notable changes of iRest for GLPI. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.1.0] - 2026-11-23
+
+First published version.
 
 ### Added
 - Page "Banks of hours" for the simplified and standard interfaces: banks of hours of the customer of the user and

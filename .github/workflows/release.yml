@@ -1,0 +1,44 @@
+# Release of iRest for GLPI, on a tag vX.Y.Z: checks the code, builds the archive, publishes it with its SHA-256.
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        php: ['8.2', '8.3', '8.4']
+    container: php:${{ matrix.php }}-cli
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the syntax of the PHP files
+        run: find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l > /dev/null
+
+  release:
+    needs: lint
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install gettext
+        run: sudo apt-get update && sudo apt-get install -y gettext
+      - name: Build the archive
+        env:
+          TAG: ${{ github.ref_name }}
+        run: sh .github/scripts/build-release.sh "$TAG"
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          version="${TAG#v}"
+          awk -v head="## [$version]" 'index($0, head) == 1 { found = 1; next } found && /^## \[/ { exit } found' CHANGELOG.md > notes.md
+          gh release create "$TAG" dist/* --verify-tag --title "iRest for GLPI $version" --notes-file notes.md

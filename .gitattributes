@@ -1,2 +1,4 @@
 * text=auto eol=lf
 *.mo binary
+.gitattributes export-ignore
+.github export-ignore
