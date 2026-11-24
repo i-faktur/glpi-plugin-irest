@@ -81,6 +81,30 @@ final class Prerequisites
     }
 
     /**
+     * Creates every missing prerequisite with the default choices of i-REST, then reports the new state to i-REST.
+     *
+     * @return list<string> labels of the elements created
+     *
+     * @throws ClientException
+     */
+    public function createMissing(): array
+    {
+        $codes = [];
+        foreach ($this->check() as $state) {
+            if ($state['status'] === 'missing') {
+                $codes[] = (string) $state['prerequisite']['code'];
+            }
+        }
+        if ($codes === []) {
+            return [];
+        }
+        $created = $this->create($codes, []);
+        $this->check();
+
+        return $created;
+    }
+
+    /**
      * State of a prerequisite in this GLPI, null for a kind this plugin does not handle.
      *
      * @param array<string, mixed> $prerequisite

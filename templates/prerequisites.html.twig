@@ -1,6 +1,53 @@
 {# Page "Preparation": prerequisites of the workflows of i-REST in this GLPI, creation of those missing #}
 <div class="container-fluid im-rst-prerequisites">
     <h2 class="my-3"><i class="ti ti-hourglass me-2"></i>{{ __('iRest preparation', 'irest') }}</h2>
+    <h3>{{ __('Installation', 'irest') }}</h3>
+    <p class="text-muted">{{ __('What i-REST needs to connect to this GLPI: profile, API user and API client. Only the elements created here are completed; nothing that exists is changed.', 'irest') }}</p>
+    {% if tokens %}
+        <div class="alert alert-warning" role="alert">
+            <p>{{ __('Copy these tokens into the i-REST connection: they will never be shown again.', 'irest') }}</p>
+            <label class="form-label" for="im-rst-app-token">{{ __('Application token', 'irest') }}</label>
+            <input type="text" id="im-rst-app-token" class="form-control mb-2" readonly autocomplete="off" value="{{ tokens.app_token }}">
+            <label class="form-label" for="im-rst-user-token">{{ __('User token', 'irest') }}</label>
+            <input type="text" id="im-rst-user-token" class="form-control" readonly autocomplete="off" value="{{ tokens.user_token }}">
+        </div>
+    {% endif %}
+    {% if install_states is null %}
+        <div class="alert alert-warning" role="alert">{{ __('The installation manifest is missing or unreadable: install the plugin again.', 'irest') }}</div>
+    {% else %}
+        {% if not install_managed and not install_automatic %}
+            <div class="alert alert-info" role="alert">{{ __('This GLPI is already configured for i-REST: no user was created automatically. Use "Create / complete" only to move to the user managed by the plugin.', 'irest') }}</div>
+        {% endif %}
+        <table class="table table-hover">
+            <thead><tr><th>{{ __('Element', 'irest') }}</th><th>{{ __('State', 'irest') }}</th></tr></thead>
+            <tbody>
+            {% for state in install_states %}
+                <tr>
+                    <td>{{ state.label }}</td>
+                    <td>
+                        {% if state.status == 'present' %}
+                            <span class="badge bg-success">{{ __('Present', 'irest') }}</span>
+                        {% elseif state.status == 'missing' %}
+                            <span class="badge bg-danger">{{ __('Missing', 'irest') }}</span>
+                        {% else %}
+                            <span class="badge bg-warning">{{ __('Already exists, not managed', 'irest') }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <form method="post" action="{{ action }}" class="d-flex flex-wrap gap-2 mb-4">
+            <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" name="install" value="1" class="btn btn-primary">{{ __('Create / complete', 'irest') }}</button>
+            <button type="submit" name="install_read_only" value="1" class="btn btn-outline-secondary">{{ __('Create read-only (trial)', 'irest') }}</button>
+            <button type="submit" name="enable_api" value="1" class="btn btn-outline-secondary">{{ __('Enable the REST API', 'irest') }}</button>
+            {% if install_managed %}
+                <button type="submit" name="generate_tokens" value="1" class="btn btn-outline-secondary" onclick="return confirm('{{ __('Generate new tokens? The previous ones will stop working.', 'irest')|e('js') }}');">{{ __('Generate the tokens', 'irest') }}</button>
+            {% endif %}
+        </form>
+    {% endif %}
+    <h3>{{ __('Prerequisites of the workflows', 'irest') }}</h3>
     <p class="text-muted">{{ __('What the workflows of i-REST need in this GLPI, as declared by i-REST. Tick what to create: it is created with your rights; nothing that exists is changed. The state is sent back to i-REST, which refuses to turn on a workflow while a required element is missing.', 'irest') }}</p>
     {% if error %}
         <div class="alert alert-warning" role="alert">{{ error }}</div>

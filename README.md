@@ -30,17 +30,37 @@ creates what i-REST declares, in one of two modes chosen in its configuration:
 - Mode push: REST API of GLPI enabled for the API user of i-REST, whose profile has the right *Data sent by i-REST*
   (tab *iRest* of the profiles), and the mode push chosen in i-REST on its GLPI connection.
 
+## Versions
+
+Releases: <https://github.com/i-faktur/glpi-plugin-irest/releases> (archive `glpi-irest-X.Y.Z.tar.bz2` and its
+SHA-256). The version follows SemVer, independently of the one of i-REST: i-REST tells which version it needs, on the
+screen *Companion application* of the connection and in its online help (minimum version by mode, recommended version
+and its download), and refuses an older one (calls answered `426` in mode read, nothing but its state written in mode
+push).
+
+| iRest for GLPI | i-REST | Modes |
+| --- | --- | --- |
+| 1.1.0 | 1.0.0 or later | read, push |
+| 1.2.0 (not released yet) | 1.0.0 or later | read, push, setup at the installation (manifest exported by i-REST) |
+
+Version 1.0.0 was never released. i-REST 1.0.0-rc.1 and 1.0.0-rc.2 have no API for the companion applications.
+
 ## Installation
 
-1. Copy the plugin into the `plugins/irest` directory of GLPI (the directory name must stay `irest`).
-2. *Setup > Plugins*: install, then enable *iRest for GLPI*.
+1. Download `glpi-irest-X.Y.Z.tar.bz2` (link on the screen *Companion application* of i-REST, or the releases) and
+   extract it in the directory `plugins` of GLPI, which receives the directory `irest` (the name must stay `irest`).
+   To update, replace this directory, then *Setup > Plugins*: *Update*.
+2. *Setup > Plugins*: install, then enable *iRest for GLPI*. On a GLPI not yet configured for i-REST, this creates the
+   profile *i-REST API*, the API user `irest-api` and the API client *i-REST*; page *Preparation*: enable the REST API
+   and generate the tokens, shown once, to copy into the i-REST connection. From the command line, as the user of the
+   site: `php bin/console plugins:irest:install --enable-api --generate-token --format=json`.
 3. Mode read: in i-REST, screen of the GLPI connection, *Companion application*: issue a key; then *Setup >
    General*, tab *iRest*: address of i-REST, key, then *Test the connection to i-REST*.
    Mode push: in i-REST, same screen, choose the mode push; give the profile of the API user of i-REST the right
    *Data sent by i-REST*; tab *iRest*: mode push, then *Check the data written by i-REST*.
-5. Profiles that may see the banks of hours: tab *iRest* of the profile, right *Banks of hours* (*My customer*,
+4. Profiles that may see the banks of hours: tab *iRest* of the profile, right *Banks of hours* (*My customer*,
    *All customers*).
-6. *Preparation*: create the missing elements.
+5. *Preparation*: create the missing elements.
 
 The key is encrypted with the key of GLPI (`glpicrypt.key`) and declared to `glpi:security:changekey`.
 Errors of the calls to i-REST are written to `files/_log/irest.log`, never the key.

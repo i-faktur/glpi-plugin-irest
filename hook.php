@@ -10,6 +10,7 @@
 
 use GlpiPlugin\Irest\Config;
 use GlpiPlugin\Irest\Document;
+use GlpiPlugin\Irest\Installer;
 use GlpiPlugin\Irest\Profile;
 
 /**
@@ -17,7 +18,9 @@ use GlpiPlugin\Irest\Profile;
  *
  * Each right is created once, for every profile, and given to the profiles that may update the configuration of GLPI
  * (Super-Admin by default): banks of hours (my customer and all the customers), data sent by i-REST (all); the
- * others are ticked one by one. A later installation keeps the choices made on the profiles.
+ * others are ticked one by one. A later installation keeps the choices made on the profiles. On a GLPI not yet
+ * configured for i-REST, the base of its installation is then created (Installer); its failure never blocks the
+ * installation of the plugin, the page "Preparation" shows what is missing.
  */
 function plugin_irest_install(): bool
 {
@@ -43,14 +46,44 @@ function plugin_irest_install(): bool
     Config::install();
     Document::install();
 
+    try {
+        $installer = new Installer();
+        if ($installer->mayInstallAutomatically()) {
+            $values = \Config::getConfigurationValues(Config::CONTEXT, [Installer::KEY_READ_ONLY]);
+            if (!$installer->install(($values[Installer::KEY_READ_ONLY] ?? '') === '1')) {
+                Toolbox::logInFile('irest', 'Installation incomplete: ' . implode(' ', $installer->errors) . "\n");
+            }
+        }
+    } catch (\Throwable $exception) {
+        Toolbox::logInFile('irest', 'Installation failed: ' . $exception->getMessage() . "\n");
+    }
+
     return true;
 }
 
 /**
- * Uninstalls the plugin: its rights, its configuration (the key of the API of i-REST included) and its documents.
+ * Enables the plugin: its API user again, if the plugin had disabled it.
+ */
+function plugin_irest_activate(): void
+{
+    (new Installer())->enableUser();
+}
+
+/**
+ * Disables the plugin and its API user; nothing is deleted.
+ */
+function plugin_irest_deactivate(): void
+{
+    (new Installer())->disableUser();
+}
+
+/**
+ * Uninstalls the plugin: its rights, its configuration (the key of the API of i-REST included) and its documents. The
+ * profile, the API user (disabled) and the API client it created are kept, with the ids that identify them.
  */
 function plugin_irest_uninstall(): bool
 {
+    (new Installer())->disableUser();
     ProfileRight::deleteProfileRights([Profile::RIGHT_HOURS_BANKS, Profile::RIGHT_DOCUMENTS]);
     Config::uninstall();
     Document::uninstall();

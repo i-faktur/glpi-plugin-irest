@@ -14,7 +14,7 @@ use GlpiPlugin\Irest\HoursBankMenu;
 use GlpiPlugin\Irest\Profile;
 
 /** Version of the plugin (SemVer, see CHANGELOG.md). */
-define('PLUGIN_IREST_VERSION', '1.1.0');
+define('PLUGIN_IREST_VERSION', '1.2.0');
 
 /** Oldest GLPI version supported. */
 define('PLUGIN_IREST_MIN_GLPI_VERSION', '11.0.0');

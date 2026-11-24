@@ -11,6 +11,7 @@
 use GlpiPlugin\Irest\Client;
 use GlpiPlugin\Irest\ClientException;
 use GlpiPlugin\Irest\Config;
+use GlpiPlugin\Irest\Prerequisites;
 
 // Saves the configuration of the plugin (tab "iRest" of Setup > General) and tests it
 // (GLPI runs the legacy scripts inside a function: the globals must be declared)
@@ -38,6 +39,13 @@ if (isset($_POST['save_mode'])) {
         $status = Client::fromConfig()->status();
         $message = Config::values()['mode'] === Config::MODE_PUSH ? __('Data of i-REST found: connection "%s".', 'irest') : __('i-REST answers: connection "%s".', 'irest');
         Session::addMessageAfterRedirect(sprintf($message, (string) ($status['connection']['label'] ?? '?')), false, INFO);
+        // The configuration works: what the workflows need is created without a click (nothing that exists is changed)
+        if (isset($_POST['save']) || Config::values()['mode'] === Config::MODE_PUSH) {
+            $created = (new Prerequisites(Client::fromConfig()))->createMissing();
+            if ($created !== []) {
+                Session::addMessageAfterRedirect(sprintf(__('Created: %s', 'irest'), implode(', ', $created)), false, INFO);
+            }
+        }
     } catch (ClientException $exception) {
         Session::addMessageAfterRedirect($exception->userMessage(), false, ERROR);
     }

@@ -147,10 +147,10 @@ class Config extends \Config
     }
 
     /**
-     * Removes the configuration of the plugin.
+     * Removes the configuration of the plugin, except the ids of the elements it created (Installer).
      */
     public static function uninstall(): void
     {
-        (new \Config())->deleteByCriteria(['context' => self::CONTEXT]);
+        (new \Config())->deleteByCriteria(['context' => self::CONTEXT, 'NOT' => ['name' => Installer::KEYS]]);
     }
 }

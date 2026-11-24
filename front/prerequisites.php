@@ -12,10 +12,34 @@ use Glpi\Application\View\TemplateRenderer;
 use GlpiPlugin\Irest\Client;
 use GlpiPlugin\Irest\ClientException;
 use GlpiPlugin\Irest\Config;
+use GlpiPlugin\Irest\Installer;
 use GlpiPlugin\Irest\Prerequisites;
 
-// Page "Preparation": prerequisites of the workflows of i-REST in this GLPI, creation of those missing
+// Page "Preparation": base of the installation of i-REST and prerequisites of its workflows, creation of those missing
 Session::checkRight('config', UPDATE);
+
+$installer = new Installer();
+$tokens = null;
+if (isset($_POST['install']) || isset($_POST['install_read_only'])) {
+    if ($installer->install(isset($_POST['install_read_only']))) {
+        Session::addMessageAfterRedirect(__('The installation is up to date.', 'irest'), false, INFO);
+    } else {
+        Session::addMessageAfterRedirect(implode(' ', $installer->errors), false, ERROR);
+    }
+    Html::redirect(Config::pageUrl('front/prerequisites.php'));
+} elseif (isset($_POST['enable_api'])) {
+    $installer->enableApi();
+    Session::addMessageAfterRedirect(__('The REST API of GLPI and the login with a user token are enabled.', 'irest'), false, INFO);
+    Html::redirect(Config::pageUrl('front/prerequisites.php'));
+} elseif (isset($_POST['generate_tokens'])) {
+    // Shown in this answer only, without a redirection: the tokens are never displayed again
+    $tokens = $installer->generateTokens();
+    if ($tokens === null) {
+        Session::addMessageAfterRedirect(__('The tokens could not be generated.', 'irest'), false, ERROR);
+    } else {
+        header('Cache-Control: no-store');
+    }
+}
 
 $states = [];
 $error = null;
@@ -42,6 +66,10 @@ try {
 
 Html::header(__('iRest preparation', 'irest'), '', 'config', 'config');
 TemplateRenderer::getInstance()->display('@irest/prerequisites.html.twig', [
+    'install_states' => $installer->states(),
+    'install_managed' => $installer->isManaged(),
+    'install_automatic' => $installer->mayInstallAutomatically(),
+    'tokens' => $tokens,
     'states' => array_map(static fn (array $state): array => $state + ['comment' => Prerequisites::text($state['prerequisite']['spec']['comment'] ?? '')], $states),
     'error'  => $error,
     'action' => Config::pageUrl('front/prerequisites.php'),

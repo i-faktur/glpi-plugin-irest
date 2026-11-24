@@ -2,6 +2,23 @@
 
 All notable changes of iRest for GLPI. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - Unreleased
+
+### Added
+- Automatic setup, on a GLPI not yet configured for i-REST: profile "i-REST API" with its rights, API user `irest-api`
+  on the root entity, recursively, as its default profile, and API client "i-REST", from a manifest produced by i-REST
+  (`install/manifest.json`). Only the elements created by the plugin are completed; an element of the same name is
+  reported and left alone.
+- Section "Installation" of the page "Preparation": state of each element, creation (read and write, or read-only for
+  a trial), button to enable the REST API, tokens generated on demand and shown once.
+- Command `plugins:irest:install` for the packages (`--read-only`, `--enable-api`, `--generate-token`, `--irest-url`,
+  `--irest-key`, `--format=json`).
+
+### Changed
+- The prerequisites of the workflows are created without a click once the configuration is saved with a working key.
+- Disabling or uninstalling the plugin disables its API user (nothing is deleted); enabling it again restores that
+  user.
+
 ## [1.1.0] - 2026-11-23
 
 First published version.

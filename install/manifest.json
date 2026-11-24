@@ -1,0 +1,61 @@
+{
+    "schema": 1,
+    "application": "glpi",
+    "names": {
+        "profile": "i-REST API",
+        "user": "irest-api",
+        "client": "i-REST"
+    },
+    "rights": [
+        {
+            "key": "dropdown",
+            "bits": 1,
+            "write": false
+        },
+        {
+            "key": "entity",
+            "bits": 1,
+            "write": false
+        },
+        {
+            "key": "entity",
+            "bits": 4,
+            "write": true
+        },
+        {
+            "key": "group",
+            "bits": 1,
+            "write": false
+        },
+        {
+            "key": "plugin_irest_documents",
+            "bits": 23,
+            "write": true
+        },
+        {
+            "key": "taskcategory",
+            "bits": 1,
+            "write": false
+        },
+        {
+            "key": "task",
+            "bits": 1,
+            "write": false
+        },
+        {
+            "key": "ticket",
+            "bits": 1024,
+            "write": false
+        },
+        {
+            "key": "user",
+            "bits": 1,
+            "write": false
+        },
+        {
+            "key": "user",
+            "bits": 6,
+            "write": true
+        }
+    ]
+}

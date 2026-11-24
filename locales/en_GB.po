@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the plugin (GPL-3.0-or-later).
 msgid ""
 msgstr ""
-"Project-Id-Version: iRest for GLPI 1.1.0\n"
+"Project-Id-Version: iRest for GLPI 1.2.0\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -240,3 +240,112 @@ msgstr "iRest is not configured yet: address of i-REST and key of its API (Setup
 
 msgid "iRest preparation"
 msgstr "iRest preparation"
+
+msgid "REST API of GLPI enabled"
+msgstr "REST API of GLPI enabled"
+
+msgid "API login with a user token enabled"
+msgstr "API login with a user token enabled"
+
+#, php-format
+msgid "Profile \"%s\""
+msgstr "Profile \"%s\""
+
+#, php-format
+msgid "API user \"%s\""
+msgstr "API user \"%s\""
+
+msgid "Profile of the API user on the root entity, recursive"
+msgstr "Profile of the API user on the root entity, recursive"
+
+msgid "Default profile of the API user"
+msgstr "Default profile of the API user"
+
+#, php-format
+msgid "Right %s"
+msgstr "Right %s"
+
+#, php-format
+msgid "API client \"%s\""
+msgstr "API client \"%s\""
+
+msgid "Application token and user token"
+msgstr "Application token and user token"
+
+msgid "The installation manifest is missing or unreadable: install the plugin again."
+msgstr "The installation manifest is missing or unreadable: install the plugin again."
+
+#, php-format
+msgid "A profile named \"%s\" already exists: it is not changed."
+msgstr "A profile named \"%s\" already exists: it is not changed."
+
+#, php-format
+msgid "The profile \"%s\" could not be created."
+msgstr "The profile \"%s\" could not be created."
+
+#, php-format
+msgid "A user named \"%s\" already exists: it is not changed."
+msgstr "A user named \"%s\" already exists: it is not changed."
+
+#, php-format
+msgid "The user \"%s\" could not be created."
+msgstr "The user \"%s\" could not be created."
+
+msgid "The profile could not be given to the API user."
+msgstr "The profile could not be given to the API user."
+
+#, php-format
+msgid "An API client named \"%s\" already exists: it is not changed."
+msgstr "An API client named \"%s\" already exists: it is not changed."
+
+#, php-format
+msgid "The API client \"%s\" could not be created."
+msgstr "The API client \"%s\" could not be created."
+
+msgid "The tokens could not be generated."
+msgstr "The tokens could not be generated."
+
+msgid "The installation is up to date."
+msgstr "The installation is up to date."
+
+msgid "The REST API of GLPI and the login with a user token are enabled."
+msgstr "The REST API of GLPI and the login with a user token are enabled."
+
+msgid "Installation"
+msgstr "Installation"
+
+msgid "What i-REST needs to connect to this GLPI: profile, API user and API client. Only the elements created here are completed; nothing that exists is changed."
+msgstr "What i-REST needs to connect to this GLPI: profile, API user and API client. Only the elements created here are completed; nothing that exists is changed."
+
+msgid "Copy these tokens into the i-REST connection: they will never be shown again."
+msgstr "Copy these tokens into the i-REST connection: they will never be shown again."
+
+msgid "Application token"
+msgstr "Application token"
+
+msgid "User token"
+msgstr "User token"
+
+msgid "This GLPI is already configured for i-REST: no user was created automatically. Use \"Create / complete\" only to move to the user managed by the plugin."
+msgstr "This GLPI is already configured for i-REST: no user was created automatically. Use \"Create / complete\" only to move to the user managed by the plugin."
+
+msgid "Already exists, not managed"
+msgstr "Already exists, not managed"
+
+msgid "Create / complete"
+msgstr "Create / complete"
+
+msgid "Create read-only (trial)"
+msgstr "Create read-only (trial)"
+
+msgid "Enable the REST API"
+msgstr "Enable the REST API"
+
+msgid "Generate the tokens"
+msgstr "Generate the tokens"
+
+msgid "Generate new tokens? The previous ones will stop working."
+msgstr "Generate new tokens? The previous ones will stop working."
+
+msgid "Prerequisites of the workflows"
+msgstr "Prerequisites of the workflows"
