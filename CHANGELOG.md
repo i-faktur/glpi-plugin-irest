@@ -2,7 +2,7 @@
 
 All notable changes of iRest for GLPI. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [1.2.0] - Unreleased
+## [1.2.0] - 2026-11-24
 
 ### Added
 - Automatic setup, on a GLPI not yet configured for i-REST: profile "i-REST API" with its rights, API user `irest-api`
