@@ -2,6 +2,14 @@
 
 All notable changes of iRest for GLPI. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.2.1] - Unreleased
+
+### Fixed
+- The automatic setup gives the rights of the GLPI metrics workflow of i-REST (`glpi_metrics`): ITIL categories and
+  notification queue, read only. The manifest (`install/manifest.json`) is regenerated from i-REST, which now lists
+  the rights of every type of workflow. The update completes the profile created by the plugin; a profile made by
+  hand is left alone, as before.
+
 ## [1.2.0] - 2026-11-24
 
 ### Added

@@ -28,9 +28,19 @@
             "write": false
         },
         {
+            "key": "itilcategory",
+            "bits": 1,
+            "write": false
+        },
+        {
             "key": "plugin_irest_documents",
             "bits": 23,
             "write": true
+        },
+        {
+            "key": "queuednotification",
+            "bits": 1,
+            "write": false
         },
         {
             "key": "taskcategory",
