@@ -2,7 +2,7 @@
 
 All notable changes of iRest for GLPI. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [1.2.1] - Unreleased
+## [1.2.1] - 2026-11-26
 
 ### Fixed
 - The automatic setup gives the rights of the GLPI metrics workflow of i-REST (`glpi_metrics`): ITIL categories and
